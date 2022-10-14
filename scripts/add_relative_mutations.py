@@ -34,6 +34,7 @@ def main(
             # new.append(",".join(sorted(list(this_nucs - parent_nucs),key=lambda x: int(x[1:-1]))))
             # new_reversions.append(",".join(sorted(list(parent_nucs - this_nucs),key=lambda x: int(x[1:-1]))))
             new.append(",".join(this_nucs - parent_nucs))
+            # TODO: Need to check it goes to root, otherwise not reversion and should be excluded
             new_reversions.append(",".join(parent_nucs - this_nucs))
         df.insert(field_counter, column=f"new_{field}", value=new)
         df.insert(field_counter, column=f"new_{field}_reversions", value=new_reversions)
