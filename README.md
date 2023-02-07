@@ -13,6 +13,7 @@ The sequences contained here are the ones used in Nextclade reference trees and 
 The repository contains:
 
 - A zst compressed fasta file with all sequences, you can easily decompress with `zstdcat data/pango_consensus_sequences.fasta.zst > pango_lineages.fasta`. And you can pick a sequence of interest using `seqkit grep -r -p "B.1.1.7" pango_lineages.fasta`.
+- Translations of all genes of all sequences in `data/translations`
 - (TODO) A tsv file with the following columns: `lineage_name`, `unaliased_lineage_name`, `substitutions`, `aa_substitutions`, `deletions`, `new_substitutions`, `new_aa_substitutions`, `new_deletions`, `new_reversions`, `new_aa_reversions`, `new_undeletions`. These files are useful if you want to check which mutations are contained and don't want to align the fasta files themselves. They are also useful to see what changed between different versions of the sequences, as they can be diffed. The `new_` columns refer to the differences with respect to the parent lineage.
 
 If you need to be sure that a sequence is correct, e.g. when you're creatin a Spike protein for an experiment, please double check using the pango designation issue (if such an issue exists) and the annotation on the Usher tree - which is independently curated by @AngieHinrichs. Also, see <https://github.com/ucscGenomeBrowser/kent/blob/master/src/hg/utils/otto/sarscov2phylo/pango.clade-mutations.tsv> for the paths extracted from the Usher tree for each lineage.
