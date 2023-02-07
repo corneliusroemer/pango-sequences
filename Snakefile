@@ -16,71 +16,97 @@ genes = [
 
 rule all:
     input:
-        expand("data/translations/pango_consensus_gene_{gene}.fasta.zst", gene=genes),
-        "build/nextclade_subset.tsv",
-        "build/nextclade_subset_unaliased.tsv",
-        "build/nextclade_subset_unaliased_relative.tsv",
-        "data/pango_consensus_sequences.fasta.zst",
-
-
-rule compress_sequences:
-    input:
-        "data/pango_consensus_sequences.fasta",
-    output:
-        "data/pango_consensus_sequences.fasta.zst",
+        commit_touchfile="commit.done",
+        # "upload.done",
     shell:
-        "zstd --ultra -21 {input} >{output}"
+        """
+        rm {input.commit_touchfile}
+        """
+
+
+rule get_consensus:
+    output:
+        "build/pango-consensus-sequences_nuc_unsorted.fasta",
+    shell:
+        # To be adjusted if repos move
+        "cp ~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta {output}"
+
+
+rule sort_sequences:
+    input:
+        "build/pango-consensus-sequences_nuc_unsorted.fasta",
+    output:
+        "build/pango-consensus-sequences_nuc.fasta",
+    shell:
+        "seqkit sort -N {input} >{output}"
 
 
 rule run_nextclade:
     input:
-        "data/pango_consensus_sequences.fasta.zst",
+        "build/pango-consensus-sequences_nuc.fasta",
     output:
         tsv="build/nextclade.tsv",
     shell:
         "nextclade run --in-order -d sars-cov-2 --output-all build {input}"
 
 
+rule compress_nuc:
+    input:
+        "build/pango-consensus-sequences_{seq_type}.fasta",
+    output:
+        "data/pango-consensus-sequences_{seq_type}.fasta.zst",
+    shell:
+        "zstd -f --ultra -21 {input} >{output}"
+
+
 rule compress_translations:
     input:
         "build/nextclade_gene_{gene}.translation.fasta",
     output:
-        "data/translations/pango_consensus_gene_{gene}.fasta.zst",
+        "data/pango-consensus-sequences_{gene}.fasta.zst",
     shell:
-        "zstd -T0 -19 {input} -o {output}"
+        "zstd -f --ultra -21 {input} >{output}"
 
 
-rule subset_tsv:
+rule create_json:
     input:
-        "build/nextclade.tsv",
+        nextclade_tsv="build/nextclade.tsv",
     output:
-        "build/nextclade_subset.tsv",
-    params:
-        fields="seqName,clade,totalSubstitutions,totalDeletions,totalInsertions,"
-        + "totalFrameShifts,totalAminoacidSubstitutions,totalAminoacidDeletions,"
-        + "frameShifts,aaDeletions,deletions,substitutions,aaSubstitutions",
+        "data/pango-consensus-sequences_summary.json",
     shell:
-        "tsv-select -H -f {params.fields} {input} > {output}"
+        """
+        python scripts/create_json.py \
+            --nextclade-tsv {input.nextclade_tsv} \
+            --output {output}
+        """
 
 
-# Use pango_aliasor package
-rule add_unaliased_name:
+rule commit_results:
     input:
-        "build/nextclade_subset.tsv",
+        "data/pango-consensus-sequences_summary.json",
+        "data/pango-consensus-sequences_nuc.fasta.zst",
+        expand("data/pango-consensus-sequences_{gene}.fasta.zst", gene=genes),
     output:
-        "build/nextclade_subset_unaliased.tsv",
+        "commit.done",
     shell:
-        "python scripts/add_unaliased.py {input} {output}"
+        """
+        git add {input}
+        git status
+        git commit -m "Update pango consensus sequences" || true
+        git push
+        touch {output}
+        """
 
 
-# Add mutations that are different from the parent lineage
-# Add as private nuc, private del, private reversions
-# private aa, private aadel, private aareversions
-# Make a script that infers these
-rule add_relative_mutations:
-    input:
-        "build/nextclade_subset_unaliased.tsv",
-    output:
-        "build/nextclade_subset_unaliased_relative.tsv",
-    shell:
-        "python scripts/add_relative_mutations.py {input} {output}"
+# rule upload_to_s3:
+#     """
+#     Upload of uncompressed files to S3
+#     All fastas and json
+#     """
+#     input:
+#     output:
+#         "upload.done",
+#     shell:
+#         """
+#         aws s3 sync data/ s3://nextstrain-data/files/pango-designation/
+#         """

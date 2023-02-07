@@ -23,7 +23,7 @@
     - Properties:
       - Unaliased
       - Parent
-      - Nuc substitutions 
+      - Nuc substitutions
       - AA substitutions
       - Nuc deletions
       - AA deletions
@@ -37,7 +37,10 @@
       - Undeletion AA mutations vs parent
       - Designation date
       - Sequence last updated
-
+    - Potential future additions:
+      - Pango notes
+      - Earliest designated sequences included in first designation and earliest few by submission date, including lab
+      - Breakpoints and donors of recombinants
 
 ## Future work
 
@@ -45,3 +48,11 @@
 - Sort mutations numerically
 - Comparison to Usher
 - Add insertions
+- Commits of changes of summary
+- How to deal with hypothetical parents like B.1.640 that don't have consensus sequences?
+  - Give them real parent even if higher up
+- What to do with pango sequences that don't have a consensus sequence? (there are ~100)
+- Deal with mutations that are not reverted like S:F486S -> S:F486P
+  - List genotypes not substitutions in nucMutations?
+  - And make reversions contain from to?
+  - Maybe have extra fields for further substitutions?
