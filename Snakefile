@@ -77,7 +77,7 @@ rule find_open_lineages:
         """
         zstdcat {input} | \
         tsv-summarize -H --group-by Nextclade_pango --count | \
-        tsv-filter -H --ge 'count:2' build/open_lineages.tsv | \
+        tsv-filter -H --ge 'count:2' | \
         tsv-select -H -f1 >{output}
         """
 
