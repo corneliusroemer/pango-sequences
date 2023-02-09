@@ -26,7 +26,7 @@ rule all:
 
 rule get_consensus:
     output:
-        "build/pango-consensus-sequences_nuc_unsorted.fasta",
+        "build/pango-consensus-sequences_genome-nuc_unsorted.fasta",
     params:
         command="scp -q roemer0001@login-transfer.scicore.unibas.ch:~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta"
         if config.get("local", False)
@@ -40,16 +40,16 @@ rule get_consensus:
 
 rule sort_sequences:
     input:
-        "build/pango-consensus-sequences_nuc_unsorted.fasta",
+        "build/pango-consensus-sequences_genome-nuc_unsorted.fasta",
     output:
-        "build/pango-consensus-sequences_nuc.fasta",
+        "build/pango-consensus-sequences_genome-nuc.fasta",
     shell:
         "seqkit sort -N {input} >{output}"
 
 
 rule run_nextclade:
     input:
-        "build/pango-consensus-sequences_nuc.fasta",
+        "build/pango-consensus-sequences_genome-nuc.fasta",
     output:
         tsv="build/nextclade.tsv",
     shell:
@@ -84,10 +84,10 @@ rule find_open_lineages:
 
 rule compress_nuc:
     input:
-        fasta="build/pango-consensus-sequences_{seq_type}.fasta",
+        fasta="build/pango-consensus-sequences_genome-nuc.fasta",
         open="build/open_lineages.txt",
     output:
-        "data/pango-consensus-sequences_{seq_type}.fasta.zst",
+        "data/pango-consensus-sequences_genome-nuc.fasta.zst",
     shell:
         """
         seqkit grep -f {input.open} {input.fasta} | \
@@ -100,7 +100,7 @@ rule compress_translations:
         fasta="build/nextclade_gene_{gene}.translation.fasta",
         open="build/open_lineages.txt",
     output:
-        "data/pango-consensus-sequences_{gene}.fasta.zst",
+        "data/pango-consensus-sequences_{gene}-aa.fasta.zst",
     shell:
         """
         seqkit grep -f {input.open} {input.fasta} | \
@@ -124,8 +124,8 @@ rule create_json:
 rule commit_results:
     input:
         "data/pango-consensus-sequences_summary.json",
-        "data/pango-consensus-sequences_nuc.fasta.zst",
-        expand("data/pango-consensus-sequences_{gene}.fasta.zst", gene=genes),
+        "data/pango-consensus-sequences_genome-nuc.fasta.zst",
+        expand("data/pango-consensus-sequences_{gene}-aa.fasta.zst", gene=genes),
     output:
         "commit.done",
     params:
