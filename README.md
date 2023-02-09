@@ -8,7 +8,7 @@ The data in this repo is automatically updated every day.
 
 For lineages that are derived from BA.2*, BA.4* and BA.5*, there has been significant curation/overwriting, but for previous lineages the amount of curation is very limited. So do expect errors.
 
-If you find errors, please open an issue here.
+If you find errors, please open an issue here. The same is true if you have ideas what other data about lineages you would like to be included here.
 
 The sequences contained here are the ones used in Nextclade reference trees and produced by code contained in the nextclade_data_workflows/sars-cov-2 repository.
 
@@ -41,7 +41,8 @@ The repository contains:
 
 ## Caveats
 
-- Not all designated lineages have consensus sequences. Some (in particular early) pandemic lineages have too few or no designatedsequences available for the algorithm to be confident.
+- Not all designated lineages are included in this repo. Some (in particular early) pandemic lineages have too few or no designated sequences available for the algorithm to be confident.
+- Consensus sequences are only published if there are more than 3 sequences of a lineage available as open data (Genbank/RKI/COG-UK)
 - Insertions are currently never included in consensus sequences. They may or may not be added in the future.
 - Currently, when one position is mutated twice, e.g. `486F->S->L` this gives rise to both a reversion and a new substitution. This might be changed in the future.
 
