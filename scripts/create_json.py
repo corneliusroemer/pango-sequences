@@ -81,8 +81,10 @@ def create_summary(
     # Add data from Nextclade
     for seq_name, row in df.iterrows():
         r[seq_name] = {
+            "lineage": seq_name,
             "unaliased": row["unaliased"],
             "parent": None,
+            "children": [],
             "nextstrainClade": row["clade_nextstrain"],
             "nucSubstitutions": row["substitutions"].split(","),
             "aaSubstitutions": row["aaSubstitutions"].split(","),
@@ -114,6 +116,9 @@ def create_summary(
             candidate = parent
 
         r[key]["parent"] = parent
+        if parent in r:
+            r[parent]["children"].append(key)
+            r[parent]["children"].sort(key=natsort_keygen())
 
     for key, val in r.items():
         for field in [

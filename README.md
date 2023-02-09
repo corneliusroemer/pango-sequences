@@ -20,8 +20,10 @@ The repository contains:
   - Nucleotide sequences are at: `data/pango-consensus-sequences_nuc.fasta.zst`
   - Translations are at: `data/pango-consensus-sequences_S.fasta.zst` etc.
 - A JSON file dictionary with Pango lineage names as keys, e.g. `BQ.1` and dicts with the following values per sequence:
+  - `lineage`: Same as key, so that one can treat dict as list and not need to use the key
   - `unaliased`: Unaliased pango lineage name, e.g. `B.1.1.529.5.3.1.1.1.1`
   - `parent`: The direct parent lineage, e.g. `BE.1.1.1` (or the first parent for which there is a consensus sequence if the direct parent doesn't have one)
+  - `children`: Array of child lineages that are present in the dataset, e.g. `["BQ.1.1", "BQ.1.2"]`
   - `nextstrainClade`: The Nextstrain clade this lineage belongs to, e.g. `22E`
   - `nucSubstitutions`: Array of nucleotide substitution strings, e.g. `["C241T","C8782T"]`
   - `aaSubstitutions`: Array of amino acid substitution strings, e.g. `["S:L452R", ORF1b:P1427"]`
