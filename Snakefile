@@ -27,9 +27,15 @@ rule all:
 rule get_consensus:
     output:
         "build/pango-consensus-sequences_nuc_unsorted.fasta",
+    params:
+        command="scp -q roemer0001@login-transfer.scicore.unibas.ch:~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta"
+        if config.get("local", False)
+        else "cp ~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta",
     shell:
         # To be adjusted if repos move
-        "cp ~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta {output}"
+        """
+        {params.command} {output}
+        """
 
 
 rule sort_sequences:
@@ -50,22 +56,56 @@ rule run_nextclade:
         "nextclade run --in-order -d sars-cov-2 --output-all build {input}"
 
 
+rule download_open_metadata:
+    output:
+        "build/open_metadata.tsv.zst",
+    shell:
+        """
+        aws s3 cp --no-progress s3://nextstrain-data/files/ncov/open/metadata.tsv.zst {output}
+        """
+
+
+rule find_open_lineages:
+    """
+    Publish consensus sequences only if there are 3 or more open genomes
+    """
+    input:
+        rules.download_open_metadata.output,
+    output:
+        "build/open_lineages.txt",
+    shell:
+        """
+        zstdcat {input} | \
+        tsv-summarize -H --group-by Nextclade_pango --count | \
+        tsv-filter -H --ge 'count:2' build/open_lineages.tsv | \
+        tsv-select -H -f1 >{output}
+        """
+
+
 rule compress_nuc:
     input:
-        "build/pango-consensus-sequences_{seq_type}.fasta",
+        fasta="build/pango-consensus-sequences_{seq_type}.fasta",
+        open="build/open_lineages.txt",
     output:
         "data/pango-consensus-sequences_{seq_type}.fasta.zst",
     shell:
-        "zstd -f --ultra -21 {input} >{output}"
+        """
+        seqkit grep -f {input.open} {input.fasta} | \
+        zstd -f --ultra -21 >{output}
+        """
 
 
 rule compress_translations:
     input:
-        "build/nextclade_gene_{gene}.translation.fasta",
+        fasta="build/nextclade_gene_{gene}.translation.fasta",
+        open="build/open_lineages.txt",
     output:
         "data/pango-consensus-sequences_{gene}.fasta.zst",
     shell:
-        "zstd -f --ultra -21 {input} >{output}"
+        """
+        seqkit grep -f {input.open} {input.fasta} | \
+        zstd -f --ultra -21 >{output}
+        """
 
 
 rule create_json:
@@ -88,12 +128,16 @@ rule commit_results:
         expand("data/pango-consensus-sequences_{gene}.fasta.zst", gene=genes),
     output:
         "commit.done",
+    params:
+        add="git add" if not config.get("test", False) else "#",
+        commit="git commit -m 'Automatic data update'; git push"
+        if not config.get("test", False)
+        else "",
     shell:
         """
-        git add {input}
+        {params.add} {input}
         git status
-        git commit -m "Update pango consensus sequences" || true
-        git push
+        {params.commit}
         touch {output}
         """
 
