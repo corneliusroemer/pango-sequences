@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ lineage.lineage }}</title>
+</head>
+
+<body>
+    <h1>{{ lineage.lineage }}</h1>
+    <table>
+        <tr>
+            <th>Lineage</th>
+            <td>{{ lineage.lineage }}</td>
+        </tr>
+        <tr>
+            <th>Unaliased</th>
+            <td>{{ lineage.unaliased }}</td>
+        </tr>
+        <tr>
+            <th>Parent</th>
+            <td>{% if lineage.parent %}<a href="/{{ lineage.parent }}/">{{ lineage.parent }}</a>{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Children</th>
+            <td>{% if lineage.children %}<ul>{% for child in lineage.children %}<li><a href="/{{ child }}/">{{ child
+                            }}</a></li>{% endfor %}</ul>{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Nextstrain Clade</th>
+            <td>{{ lineage.nextstrainClade }}</td>
+        </tr>
+        <tr>
+            <th>Nucleotide Substitutions</th>
+            <td>
+                <ul>{% for substitution in lineage.nucSubstitutions %}<li>{{ substitution }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Amino Acid Substitutions</th>
+            <td>
+                <ul>{% for substitution in lineage.aaSubstitutions %}<li>{{ substitution }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Nucleotide Deletions</th>
+            <td>
+                <ul>{% for deletion in lineage.nucDeletions %}<li>{{ deletion }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Amino Acid Deletions</th>
+            <td>
+                <ul>{% for deletion in lineage.aaDeletions %}<li>{{ deletion }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>New Nucleotide Substitutions</th>
+            <td>
+                <ul>{% for substitution in lineage.nucSubstitutionsNew %}<li>{{ substitution }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>New Amino Acid Substitutions</th>
+            <td>
+                <ul>{% for substitution in lineage.aaSubstitutionsNew %}<li>{{ substitution }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>New Nucleotide Deletions</th>
+            <td>
+                <ul>{% for deletion in lineage.nucDeletionsNew %}<li>{{ deletion }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>New Amino Acid Deletions</th>
+            <td>
+                <ul>{% for deletion in lineage.aaDeletionsNew %}<li>{{ deletion }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Reverted Nucleotide Substitutions</th>
+            <td>
+                <ul>{% for substitution in lineage.nucSubstitutionsReverted %}<li>{{ substitution }}</li>{% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Reverted Amino Acid Substitutions</th>
+            <td>
+                <ul>{% for substitution in lineage.aaSubstitutionsReverted %}<li>{{ substitution }}</li>{% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Reverted Nucleotide Deletions</th>
+            <td>
+                <ul>{% for deletion in lineage.nucDeletionsReverted %}<li>{{ deletion }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Reverted Amino Acid Deletions</th>
+            <td>
+                <ul>{% for deletion in lineage.aaDeletionsReverted %}<li>{{ deletion }}</li>{% endfor %}</ul>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
