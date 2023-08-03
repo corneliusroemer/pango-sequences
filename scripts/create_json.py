@@ -40,6 +40,11 @@ def del_all(mapping, to_remove):
     for key in to_remove:
         mapping.pop(key, None)
 
+def split_comma(input: str) -> list[str]:
+    # Split comma-separated string into list
+    # However, instead of return list with empty string, return empty list
+    retval = input.split(",")
+    return retval if retval != [""] else []
 
 def create_summary(
     nextclade_tsv: str = typer.Option(
@@ -86,10 +91,10 @@ def create_summary(
             "parent": None,
             "children": [],
             "nextstrainClade": row["clade_nextstrain"],
-            "nucSubstitutions": row["substitutions"].split(","),
-            "aaSubstitutions": row["aaSubstitutions"].split(","),
-            "nucDeletions": row["deletions"].split(","),
-            "aaDeletions": row["aaDeletions"].split(","),
+            "nucSubstitutions": split_comma(row["substitutions"]),
+            "aaSubstitutions": split_comma(row["aaSubstitutions"]),
+            "nucDeletions": split_comma(row["deletions"]),
+            "aaDeletions": split_comma(row["aaDeletions"]),
             "nucSubstitutionsNew": None,
             "aaSubstitutionsNew": None,
             "nucDeletionsNew": None,
@@ -98,7 +103,7 @@ def create_summary(
             "aaSubstitutionsReverted": None,
             "nucDeletionsReverted": None,
             "aaDeletionsReverted": None,
-            "frameShifts": row["frameShifts"].split(","),
+            "frameShifts": split_comma(row["frameShifts"]),
             "designationDate": None,
             # "sequenceLastUpdated": None,
             # "entryLastUpdated": None,
