@@ -40,11 +40,13 @@ def del_all(mapping, to_remove):
     for key in to_remove:
         mapping.pop(key, None)
 
+
 def split_comma(input: str) -> list[str]:
     # Split comma-separated string into list
     # However, instead of return list with empty string, return empty list
     retval = input.split(",")
     return retval if retval != [""] else []
+
 
 def create_summary(
     nextclade_tsv: str = typer.Option(
@@ -149,6 +151,61 @@ def create_summary(
 
             r[key][field + "New"] = new
             r[key][field + "Reverted"] = reversions
+
+    def mut_to_dict(mut: str) -> (str, str, str):
+        gene = ""
+        if ":" in mut:
+            # Amino acid
+            gene, mut = mut.split(":")
+            gene = gene + ":"
+        ref = mut[0]
+        alt = mut[-1]
+        pos = gene + mut[1:-1]
+        return pos, ref, alt
+    
+    def format_mut(pos: str, ref: str, alt: str) -> str:
+        if ":" in pos:
+            gene, pos = pos.split(":")
+            gene = gene + ":"
+        else:
+            gene = ""
+        return gene + ref + pos + alt
+
+    # Get mutations relative to parent
+    for key, val in r.items():
+        for field in [
+            "nucSubstitutions",
+            "aaSubstitutions",
+        ]:
+            field_relative = field + "Relative"
+            parent = val["parent"]
+            parent_muts = r.get(parent,{}).get(field, [])
+            child_muts = val[field]
+            parent_dict = {}
+            child_dict = {}
+            for mut in parent_muts:
+                pos, ref, alt = mut_to_dict(mut)
+                parent_dict[pos] = (ref,alt)
+            for mut in child_muts:
+                pos, ref, alt = mut_to_dict(mut)
+                child_dict[pos] = (ref,alt)
+            r[key][field_relative] = [] 
+            for pos, mut in child_dict.items():
+                ref, alt = mut
+                parent_ref, parent_alt = parent_dict.get(pos, (None, None))
+                if parent_alt is not None:
+                    if parent_alt != alt:
+                        # Parent and child have different mutations at this position
+                        r[key][field_relative].append(format_mut(pos, parent_alt, alt))
+                else:
+                    r[key][field_relative].append(format_mut(pos, ref, alt))
+            for pos, mut in parent_dict.items():
+                ref, alt = mut
+                alt = child_dict.get(pos, (None, None))
+                if pos not in child_dict:
+                    # Reversion to reference
+                    r[key][field_relative].append(format_mut(pos, alt, ref))
+        
 
     # Add data from designation dates
     designation_dates = pd.read_csv(
