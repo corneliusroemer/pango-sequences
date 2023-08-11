@@ -47,6 +47,27 @@ def split_comma(input: str) -> list[str]:
     retval = input.split(",")
     return retval if retval != [""] else []
 
+def itemize_del_range(input: list[str], refseq: str) -> list[str]:
+    # Turn del range 10-15 into mutations: C10-, T11-, ...
+    # Look up ref nucleotides from refseq
+    retval = []
+    for del_range in input:
+        if "-" not in del_range:
+            retval.append(f"{refseq[int(del_range) - 1]}{del_range}-")
+        else:
+            start, end = del_range.split("-")
+            for i in range(int(start), int(end) + 1):
+                retval.append(f"{refseq[i - 1]}{i}-")
+    return retval
+
+def get_refseq() -> str:
+    # Extract ref as "B" from "data/pango-consensus-sequences_nuc.fasta"
+    from Bio import SeqIO
+    with open("build/pango-consensus-sequences_nuc.fasta") as f:
+        # Look for seq with id "B"
+        for record in SeqIO.parse(f, "fasta"):
+            if record.id == "B":
+                return str(record.seq)
 
 def create_summary(
     nextclade_tsv: str = typer.Option(
@@ -67,6 +88,8 @@ def create_summary(
     ALIAS_FILE = "build/alias_key.json"
     ALIAS_KEY_JSON_URL = "https://raw.githubusercontent.com/cov-lineages/pango-designation/master/pango_designation/alias_key.json"
     DESIGNATION_DATES_URL = "https://raw.githubusercontent.com/corneliusroemer/pango-designation-dates/main/data/lineage_designation_date.csv"
+
+
     with open(ALIAS_FILE, "w") as f:
         f.write(requests.get(ALIAS_KEY_JSON_URL).text)
     aliasor = Aliasor(ALIAS_FILE)
@@ -83,6 +106,9 @@ def create_summary(
 
     df.sort_values(by="unaliased", key=natsort_keygen(), inplace=True)
 
+    # Get refseq
+    refseq = get_refseq()
+
     r = {}
 
     # Add data from Nextclade
@@ -93,18 +119,14 @@ def create_summary(
             "parent": None,
             "children": [],
             "nextstrainClade": row["clade_nextstrain"],
-            "nucSubstitutions": split_comma(row["substitutions"]),
-            "aaSubstitutions": split_comma(row["aaSubstitutions"]),
-            "nucDeletions": split_comma(row["deletions"]),
-            "aaDeletions": split_comma(row["aaDeletions"]),
-            "nucSubstitutionsNew": None,
-            "aaSubstitutionsNew": None,
-            "nucDeletionsNew": None,
-            "aaDeletionsNew": None,
-            "nucSubstitutionsReverted": None,
-            "aaSubstitutionsReverted": None,
-            "nucDeletionsReverted": None,
-            "aaDeletionsReverted": None,
+            "mutations": {
+                "wuhan": {
+                    "nucSubstitutions": split_comma(row["substitutions"]),
+                    "aaSubstitutions": split_comma(row["aaSubstitutions"]),
+                    "nucDeletions": itemize_del_range(split_comma(row["deletions"]), refseq),
+                    "aaDeletions": split_comma(row["aaDeletions"]),
+                },
+            },
             "frameShifts": split_comma(row["frameShifts"]),
             "designationDate": None,
             # "sequenceLastUpdated": None,
@@ -115,6 +137,9 @@ def create_summary(
         ".".join(aliasor.uncompress(x).split(".")[:-1])
     )
 
+    # Add parent, but check that parent is in list of variants
+    # E.g. B.1.1.529 is skipped as it has no representative
+    # So BA.1 gets B.1.1 as parent
     for key, val in r.items():
         parent = None
         candidate = key
@@ -127,31 +152,7 @@ def create_summary(
             r[parent]["children"].append(key)
             r[parent]["children"].sort(key=natsort_keygen())
 
-    for key, val in r.items():
-        for field in [
-            "nucSubstitutions",
-            "aaSubstitutions",
-            "nucDeletions",
-            "aaDeletions",
-        ]:
-            parent = val["parent"]
-            child_val = dict.fromkeys(val[field])
-            if parent == "":
-                parent_val = {}
-            else:
-                parent_val = dict.fromkeys(r[parent][field])
-
-            new = deepcopy(child_val)
-
-            del_all(new, parent_val.keys())
-            del_all(parent_val, child_val.keys())
-
-            new = list(new.keys())
-            reversions = list(parent_val.keys())
-
-            r[key][field + "New"] = new
-            r[key][field + "Reverted"] = reversions
-
+    # Calculate relative mutations for pango and clade parent
     def mut_to_dict(mut: str) -> (str, str, str):
         gene = ""
         if ":" in mut:
@@ -162,7 +163,7 @@ def create_summary(
         alt = mut[-1]
         pos = gene + mut[1:-1]
         return pos, ref, alt
-    
+
     def format_mut(pos: str, ref: str, alt: str) -> str:
         if ":" in pos:
             gene, pos = pos.split(":")
@@ -171,41 +172,53 @@ def create_summary(
             gene = ""
         return gene + ref + pos + alt
 
+
+    #TODO: Implement Nextstrain clade later
+
     # Get mutations relative to parent
     for key, val in r.items():
-        for field in [
-            "nucSubstitutions",
-            "aaSubstitutions",
-        ]:
-            field_relative = field + "Relative"
-            parent = val["parent"]
-            parent_muts = r.get(parent,{}).get(field, [])
-            child_muts = val[field]
+        pango_parent = val["parent"]
+        if pango_parent is None:
+            continue
+        # TODO: Deletions
+        muts = {
+            "nucSubstitutions": [],
+            "aaSubstitutions": [],
+            "aaDeletions": [],
+            "nucDeletions": [],
+        }
+        for field in muts.keys():
+            try:
+                parent_muts = r[pango_parent]["mutations"]["wuhan"][field]
+            except KeyError:
+                parent_muts = []
+            child_muts = val["mutations"]["wuhan"][field]
             parent_dict = {}
             child_dict = {}
             for mut in parent_muts:
                 pos, ref, alt = mut_to_dict(mut)
-                parent_dict[pos] = (ref,alt)
+                parent_dict[pos] = (ref, alt)
             for mut in child_muts:
                 pos, ref, alt = mut_to_dict(mut)
-                child_dict[pos] = (ref,alt)
-            r[key][field_relative] = [] 
+                child_dict[pos] = (ref, alt)
             for pos, mut in child_dict.items():
                 ref, alt = mut
                 parent_ref, parent_alt = parent_dict.get(pos, (None, None))
                 if parent_alt is not None:
                     if parent_alt != alt:
                         # Parent and child have different mutations at this position
-                        r[key][field_relative].append(format_mut(pos, parent_alt, alt))
+                        muts[field].append(
+                            format_mut(pos, parent_alt, alt)
+                        )
                 else:
-                    r[key][field_relative].append(format_mut(pos, ref, alt))
+                    muts[field].append(format_mut(pos, ref, alt))
             for pos, mut in parent_dict.items():
                 ref, alt = mut
-                alt = child_dict.get(pos, (None, None))
                 if pos not in child_dict:
                     # Reversion to reference
-                    r[key][field_relative].append(format_mut(pos, alt, ref))
-        
+                    muts[field].append(format_mut(pos, alt, ref))
+
+        r[key]["mutations"]["pangoParent"] = muts
 
     # Add data from designation dates
     designation_dates = pd.read_csv(
