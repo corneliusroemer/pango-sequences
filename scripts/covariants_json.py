@@ -1,9 +1,7 @@
 # %%
 from itertools import chain
 import json
-from typing import List
 
-from more_itertools import flatten
 
 xbb = {
     "nucSubstitutions": [
@@ -268,54 +266,54 @@ def responsible_nucs(aa: str, nuc_subs: list[str]) -> list[str]:
 # An aa may be affected if the deletion range overlaps with the aa range
 
 
-def nuc_del_overlap(nuc_pos: int, del_range: str) -> bool:
-    """
-    Check if a nuc position overlaps with a deletion range
-    """
-    if not del_range:
-        print("Empty deletion range")
-        raise ValueError
-    if "-" not in del_range:
-        del_start = del_end = int(del_range)
-    else:
-        del_start, del_end = map(int, del_range.split("-"))
-    return del_start <= nuc_pos <= del_end
+# def nuc_del_overlap(nuc_pos: int, del_range: str) -> bool:
+#     """
+#     Check if a nuc position overlaps with a deletion range
+#     """
+#     if not del_range:
+#         print("Empty deletion range")
+#         raise ValueError
+#     if "-" not in del_range:
+#         del_start = del_end = int(del_range)
+#     else:
+#         del_start, del_end = map(int, del_range.split("-"))
+#     return del_start <= nuc_pos <= del_end
 
 
-def responsible_dels(aa: str, dels: List[str]) -> List[str]:
-    """
-    Given an amino acid substitution, find the deletions that may be responsible for it
-    """
-    # Find nuc positions that may be responsible for the aa substitution
-    nucs = nucs_from_aa(aa)
+# def responsible_dels(aa: str, dels: List[str]) -> List[str]:
+#     """
+#     Given an amino acid substitution, find the deletions that may be responsible for it
+#     """
+#     # Find nuc positions that may be responsible for the aa substitution
+#     nucs = nucs_from_aa(aa)
 
-    retval = [
-        del_range
-        for del_range in dels
-        if any(nuc_del_overlap(nuc, del_range) for nuc in nucs)
-    ]
+#     retval = [
+#         del_range
+#         for del_range in dels
+#         if any(nuc_del_overlap(nuc, del_range) for nuc in nucs)
+#     ]
 
-    return retval
+#     return retval
 
 
 # %%
 # Attribute AA deletions to nuc deletions
 
 
-def nuc_del_causing_aa_del(aa_del: str, nuc_dels: List[str]) -> List[str]:
-    """
-    Given an amino acid deletion, find the deletions that may be responsible for it
-    """
-    # Find nuc positions that may be responsible for the aa substitution
-    nucs = nucs_from_aa(aa_del)
+# def nuc_del_causing_aa_del(aa_del: str, nuc_dels: List[str]) -> List[str]:
+#     """
+#     Given an amino acid deletion, find the deletions that may be responsible for it
+#     """
+#     # Find nuc positions that may be responsible for the aa substitution
+#     nucs = nucs_from_aa(aa_del)
 
-    retval = [
-        del_range
-        for del_range in nuc_dels
-        if any(nuc_del_overlap(nuc, del_range) for nuc in nucs)
-    ]
+#     retval = [
+#         del_range
+#         for del_range in nuc_dels
+#         if any(nuc_del_overlap(nuc, del_range) for nuc in nucs)
+#     ]
 
-    return retval
+#     return retval
 
 
 # %%
@@ -328,11 +326,10 @@ def nuc_sub_dict(nuc_subs: list[str]) -> dict[int, dict[str, str]]:
     """
     retval = {}
     for nuc_sub in nuc_subs:
-        nuc_pos = nuc_pos_from_nuc(nuc_sub)
+        nuc_pos = int(nuc_pos_from_nuc(nuc_sub))
         ref, alt = nuc_sub[0], nuc_sub[-1]
         retval[nuc_pos] = {"ref": ref, "alt": alt}
     return retval
-
 
 
 # %%
@@ -344,10 +341,9 @@ def nuc_sub_dict(nuc_subs: list[str]) -> dict[int, dict[str, str]]:
 def aa_changes(
     aa_subs: list[str],
     aa_dels: list[str],
-    nuc_subs: list[str],
-    nuc_dels: list[str],
-) -> list[dict]:
-    retval = []
+    nuc_dict: dict[int, dict[str, str]],
+) -> dict[str, dict[int, dict]]:
+    retval = {}
     for aa_sub in chain(aa_subs, aa_dels):
         gene, mut = aa_sub.split(":")
         aa_pos = int(mut[1:-1])
@@ -356,25 +352,49 @@ def aa_changes(
         # Check which of the nuc subs and nuc del positions overlap the codon
         nuc_pos = set()
         for pos in nucs:
-            # Add substitutions
-            if pos in nuc_sub_dict(nuc_subs):
+            if pos in nuc_dict:
                 nuc_pos.add(pos)
-            # Add deletions
-            for nuc_del in nuc_dels:
-                if nuc_del_overlap(pos, nuc_del):
-                    nuc_pos.add(pos)
         ref, alt = mut[0], mut[-1]
-        retval.append(
-            {
-                "gene": gene,
-                "pos": aa_pos,
-                "ref": ref,
-                "alt": alt,
-                "nucPos": list(nuc_pos),
-            }
-        )
+        if gene not in retval:
+            retval[gene] = {}
+        retval[gene][aa_pos] = {
+            "ref": ref,
+            "alt": alt,
+            "nucPos": list(nuc_pos),
+        }
     return retval
 
+
+# %%
+def massage_frameshifts(
+    frameshifts: list[str],
+    nuc_dict: dict[int, dict[str, str]],
+) -> dict[str, dict[int, dict]]:
+    retval = {}
+    for fs in frameshifts:
+        gene, mut = fs.split(":")
+        if "-" in mut:
+            start, end = map(int, mut.split("-"))
+        else:
+            start = end = int(mut)
+        for side, aa_pos in ("start", start), ("end", end):
+            codon_start = GENEMAP[gene]["start"] + 3 * (aa_pos - 1)
+            nucs = [codon_start, codon_start + 1, codon_start + 2]
+            # Check which of the nuc subs and nuc del positions overlap the codon
+            nuc_pos = set()
+            for pos in nucs:
+                if pos in nuc_dict:
+                    nuc_pos.add(pos)
+            if gene not in retval:
+                retval[gene] = {}
+            retval[gene][aa_pos] = {
+                "ref": "",
+                "alt": "frameShiftStart"
+                if side == "start"
+                else "frameShiftEnd",
+                "nucPos": list(nuc_pos),
+            }
+    return retval
 
 
 # %%
@@ -383,62 +403,149 @@ def aa_changes(
 # If it does not, then it is not itemized
 
 
-def delection_dicts(
-    nuc_dels: list[str], aa_changes: list[dict]
-) -> (list[dict], dict[int, dict]):
-    range_list = []
-    range_dict = {}
-    list_of_nuc_pos = set(flatten([m["nucPos"] for m in aa_changes]))
-    for nuc_del in nuc_dels:
-        # Get start and end inclusive of deletion range
-        if "-" not in nuc_del:
-            start = end = int(nuc_del)
-        else:
-            start, end = map(int, nuc_del.split("-"))
-        itemize = list_of_nuc_pos.intersection(range(start, end + 1)) != set()
-        if itemize:
-            for pos in range(start, end + 1):
-                range_dict[pos] = {"alt": "-"}
-        else:
-            range_list.append({"start": start, "end": end})
-    return range_list, range_dict
+# This is code to decide whether a deletion range can be aggregated/itemized or not
+# Currently we don't use deletion ranges so we don't need this
+# def delection_dicts(
+#     nuc_dels: list[str], aa_changes: dict[str, dict[int, dict]]
+# ) -> (list[dict], dict[int, dict]):
+#     range_list = []
+#     range_dict = {}
+#     list_of_nuc_pos = set()
+#     for gene in aa_changes:
+#         for aa_pos in aa_changes[gene]:
+#             list_of_nuc_pos.update(aa_changes[gene][aa_pos]["nucPos"])
+#     for nuc_del in nuc_dels:
+#         # Get start and end inclusive of deletion range
+#         if "-" not in nuc_del:
+#             start = end = int(nuc_del)
+#         else:
+#             start, end = map(int, nuc_del.split("-"))
+#         itemize = list_of_nuc_pos.intersection(range(start, end + 1)) != set()
+#         if itemize:
+#             for pos in range(start, end + 1):
+#                 range_dict[pos] = {"alt": "-"}
+#         else:
+#             range_list.append({"start": start, "end": end})
+#     return range_list, range_dict
 
 
-ranges, items = delection_dicts(
-    xbb["nucDeletions"],
-    aa_changes(
-        xbb["aaSubstitutions"],
-        xbb["aaDeletions"],
-        xbb["nucSubstitutions"],
-        xbb["nucDeletions"],
-    ),
-)
+# ranges, items = delection_dicts(
+#     xbb["nucDeletions"],
+#     aa_changes(
+#         xbb["aaSubstitutions"],
+#         xbb["aaDeletions"],
+#         xbb["nucSubstitutions"],
+#         xbb["nucDeletions"],
+#     ),
+# )
 
 # %%
 import json
 
-d: dict = json.load(open("data/pango-consensus-sequences_summary.json"))
+# d: dict = json.load(open("data/pango-consensus-sequences_summary.json"))
+d: dict = json.load(open("test.json"))
+
+# %%
+# Frameshifts can be split into two mutations: start and end
+# Then treated like any other AA mutations
+
 
 # %%
 # Add new fields for each lineage
 
-dout = {}
-for lineage, data in d.items():
-    df = {
-        "nuc": nuc_sub_dict(data["nucSubstitutions"]),
-        "aa": aa_changes(
-            data["aaSubstitutions"],
-            data["aaDeletions"],
-            data["nucSubstitutions"],
-            data["nucDeletions"],
-        ),
-    }
-    ranges, itemized = delection_dicts(data["nucDeletions"], df["aa"])
-    df["nucDelRanges"] = ranges
-    df["nuc"].update(itemized)
-    dout[lineage] = df
+# Columns to add from d to dout
+pass_through = [
+    "lineage",
+    "unaliased",
+    "parent",
+    "children",
+    "nextstrainClade",
+    "frameShifts",
+    "designationDate",
+]
 
-#%%
+dout = {
+    lineage: {k: v for k, v in d[lineage].items() if k in pass_through}
+    for lineage in d
+}
+print(dout)
+# %%
+for lineage, val in d.items():
+    dout[lineage]["mutations"] = {}
+    for ref, data in val["mutations"].items():
+        nucs = {
+            **nuc_sub_dict(data["nucSubstitutions"]),
+            **nuc_sub_dict(data["nucDeletions"]),
+        }
+        df = {
+            "nuc": nucs,
+            "aa": aa_changes(
+                data["aaSubstitutions"],
+                data["aaDeletions"],
+                nucs,
+            ),
+            "frameshifts": massage_frameshifts(val["frameShifts"], nucs),
+        }
+        # Add constructed dict to dout
+        dout[lineage]["mutations"][ref] = df
+
+# %%
+
+# Add some dummy annotations
+# Two types of annotation:
+# - "nuc" for nucleotide substitutions
+# - "aa" for amino acid substitutions
+# Can embed these right in the "nuc" and "aa" dicts
+
+# Add dummy annotation to BA.2.75
+annotations = {
+    "BQ.1": {
+        "byNuc": {
+            "26858": "Reverted relative to 21L",
+            "27259": "Reverted relative to 21L",
+            "27382": "Reverted relative to 21L",
+            "27383": "Reverted relative to 21L",
+            "27384": "Reverted relative to 21L",
+            "28311": "This mutation causes ORG9b:P10S, but the adjacent mutation changes to P10F",
+            "28312": "This mutation on top of 28311, change ORf9b:P10S to P10F",
+        },
+        # keys here can be changed to whatever matches most easily to the main file
+        "byAA": {
+            "S:24": "Deletion removes last 2 bases from AA 24, entirety of 25/26, first base of 27",
+            "S:25": "Deletion removes last 2 bases from AA 24, entirety of 25/26, first base of 27",
+            "S:26": "Deletion removes last 2 bases from AA 24, entirety of 25/26, first base of 27",
+            "S:27": "This change is a consequence of the prior deletion",
+            "S:493": "Note mutation S:Q493R (in 21L) is reverted here",
+            "ORF6:61": "Note mutation in ORF6:D61L (in 21L) is reverted here",
+            # this mutation also affects ORF9b but for a note, just listing it once should be enough..?!
+            "N:31": "Deletion in-frame for ORF9b; in N, deletes last 2 bases of AA 30, entirety of 31/32, first base of 33",
+            "N:32": "Deletion in-frame for ORF9b; in N, deletes last 2 bases of AA 30, entirety of 31/32, first base of 33",
+            "N:33": "Deletion in-frame for ORF9b; in N, deletes last 2 bases of AA 30, entirety of 31/32, first base of 33",
+        },
+    }
+}
+
+for lineage, data in annotations.items():
+    for ref, mut_dicts in dout[lineage]["mutations"].items():
+        print(lineage, ref)
+        for pos in data["byNuc"]:
+            if int(pos) in mut_dicts["nuc"]:
+                dout[lineage]["mutations"][ref]["nuc"][int(pos)][
+                    "annotation"
+                ] = data["byNuc"][pos]
+            else:
+                print(f"Warning: {pos} not in {lineage} nuc substitutions")
+        for pos in data["byAA"]:
+            gene, aa_pos = pos.split(":")
+            aa_pos = int(aa_pos)
+            if gene in mut_dicts["aa"] and aa_pos in mut_dicts["aa"][gene]:
+                dout[lineage]["mutations"][ref]["aa"][gene][aa_pos][
+                    "annotation"
+                ] = data["byAA"][pos]
+            else:
+                print(f"Warning: {pos} not in {lineage} aa substitutions")
+
+# %%
 json.dump(
     dout,
     open("covariants.json", "w"),
