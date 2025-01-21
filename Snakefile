@@ -34,7 +34,8 @@ rule get_consensus:
     shell:
         # To be adjusted if repos move
         """
-        {params.command} {output}
+        #{params.command} {output}
+        cp ../nextclade_data_workflows/sars-cov-2/pre-processed/synthetic.fasta {output}
         """
 
 
