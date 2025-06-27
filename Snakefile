@@ -23,19 +23,25 @@ rule all:
         rm {input.commit_touchfile}
         """
 
+match config.get("environment", "m2"):
+    case scicore:
+        CONSENSUS_CMD="cp ~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta"
+    case m2:
+        CONSENSUS_CMD="cp ~/code/nextclade_data_workflows/sars-cov-2/pre-processed/synthetic.fasta"
+    case scp:
+        CONSENSUS_CMD="scp -q roemer0001@login-transfer.scicore.unibas.ch:~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta"
+    case _:
+        raise ValueError(f"Unknown environment: {config.get('environment', 'scicore')}")
 
 rule get_consensus:
     output:
         "build/pango-consensus-sequences_genome-nuc_unsorted.fasta",
     params:
-        command="scp -q roemer0001@login-transfer.scicore.unibas.ch:~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta"
-        if config.get("local", False)
-        else "cp ~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta",
+        command=CONSENSUS_CMD,
     shell:
         # To be adjusted if repos move
         """
-        #{params.command} {output}
-        cp ../nextclade_data_workflows/sars-cov-2/pre-processed/synthetic.fasta {output}
+        {params.command} {output}
         """
 
 
