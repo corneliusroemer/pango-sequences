@@ -24,11 +24,11 @@ rule all:
         """
 
 match config.get("environment", "m2"):
-    case scicore:
+    case "scicore":
         CONSENSUS_CMD="cp ~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta"
-    case m2:
+    case "m2":
         CONSENSUS_CMD="cp ~/code/nextclade_data_workflows/sars-cov-2/pre-processed/synthetic.fasta"
-    case scp:
+    case "scp":
         CONSENSUS_CMD="scp -q roemer0001@login-transfer.scicore.unibas.ch:~/nextclade_gisaid/sars-cov-2/pre-processed/synthetic.fasta"
     case _:
         raise ValueError(f"Unknown environment: {config.get('environment', 'scicore')}")
