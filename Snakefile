@@ -59,6 +59,7 @@ rule run_nextclade:
         "build/pango-consensus-sequences_genome-nuc.fasta",
     output:
         tsv="build/nextclade.tsv",
+        translations=expand("build/nextclade.cds_translation.{gene}.fasta", gene=genes),
     shell:
         "nextclade run --in-order -d sars-cov-2 --output-all build {input}"
 
@@ -74,7 +75,7 @@ rule compress_nuc:
 
 rule compress_translations:
     input:
-        "build/nextclade_gene_{gene}.translation.fasta",
+        "build/nextclade.cds_translation.{gene}.fasta",
     output:
         "data/pango-consensus-sequences_{gene}-aa.fasta.zst",
     shell:
