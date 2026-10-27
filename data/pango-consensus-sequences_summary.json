@@ -141657,6 +141657,7 @@
    "C21T",
    "G24A",
    "T25G",
+   "A30G",
    "C241T",
    "T670G",
    "C897A",
@@ -141870,8 +141871,7 @@
    "S:E1150D"
   ],
   "nucDeletions": [
-   "30-44",
-   "48",
+   "32-48",
    "11288-11296",
    "21633-21641",
    "21765-21770",
@@ -141903,14 +141903,14 @@
   "nucSubstitutionsNew": [
    "G24A",
    "T25G",
+   "A30G",
    "G22599C"
   ],
   "aaSubstitutionsNew": [
    "S:R346T"
   ],
   "nucDeletionsNew": [
-   "30-44",
-   "48"
+   "32-48"
   ],
   "aaDeletionsNew": [],
   "nucSubstitutionsReverted": [
@@ -298830,7 +298830,6 @@
   ],
   "nextstrainClade": "24C",
   "nucSubstitutions": [
-   "C21T",
    "C44T",
    "C241T",
    "T670G",
@@ -299058,7 +299057,7 @@
    "S:P1143L"
   ],
   "nucDeletions": [
-   "12-20",
+   "12-21",
    "11288-11296",
    "21633-21641",
    "21653-21655",
@@ -299097,10 +299096,12 @@
    "S:R346T"
   ],
   "nucDeletionsNew": [
-   "12-20"
+   "12-21"
   ],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [],
+  "nucSubstitutionsReverted": [
+   "C21T"
+  ],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
@@ -299378,6 +299379,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
+   "C21T",
    "A9235G",
    "C15240T",
    "G29227T"
@@ -299388,7 +299390,7 @@
   "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [
-   "12-20"
+   "12-21"
   ],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -299666,6 +299668,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
+   "C21T",
    "A7857G",
    "C15240T"
   ],
@@ -299679,7 +299682,7 @@
   "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [
-   "12-20"
+   "12-21"
   ],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -453110,7 +453113,6 @@
    "G21624C",
    "C21639T",
    "C21762T",
-   "A21766T",
    "C21846T",
    "T21864C",
    "T22032C",
@@ -453236,67 +453238,13 @@
    "ORF9b:P10S",
    "S:P9L",
    "S:R21T",
-   "S:P26L",
-   "S:A67V",
-   "S:T95I",
-   "S:I101T",
-   "S:F157S",
-   "S:N164K",
-   "S:S172F",
-   "S:K187T",
-   "S:L212I",
-   "S:P251S",
-   "S:I326V",
-   "S:G339Y",
-   "S:A348P",
-   "S:K356T",
-   "S:S371F",
-   "S:S373P",
-   "S:S375F",
-   "S:R403K",
-   "S:D405N",
-   "S:R408S",
-   "S:K417N",
-   "S:A435S",
-   "S:N440R",
-   "S:V445A",
-   "S:G446D",
-   "S:L452W",
-   "S:N460K",
-   "S:S477N",
-   "S:T478N",
-   "S:E484K",
-   "S:G496S",
-   "S:Q498R",
-   "S:N501Y",
-   "S:K529N",
-   "S:E554D",
-   "S:A575S",
-   "S:E583D",
-   "S:D614G",
-   "S:H625R",
-   "S:N641K",
-   "S:V642G",
-   "S:E654K",
-   "S:H655Y",
-   "S:N679R",
-   "S:P681H",
-   "S:A688D",
-   "S:S704L",
-   "S:N764K",
-   "S:K795T",
-   "S:D796Y",
-   "S:A852K",
-   "S:S939F",
-   "S:Q954H",
-   "S:N969K",
-   "S:D1184E"
+   "S:P26L"
   ],
   "nucDeletions": [
    "515-523",
    "686-694",
    "11288-11296",
-   "21767-21772",
+   "21766-21772",
    "21968-22003",
    "22194-22196",
    "22289-22294",
@@ -453442,8 +453390,91 @@
    "ORF9b:E27-",
    "ORF9b:N28-",
    "ORF9b:A29-",
+   "S:A67-",
+   "S:I68-",
    "S:H69-",
-   "S:V70-",
+   "S:V70-"
+  ],
+  "nucSubstitutionsNew": [
+   "T25159C",
+   "C28994T"
+  ],
+  "aaSubstitutionsNew": [
+   "N:Q241Y"
+  ],
+  "nucDeletionsNew": [
+   "686-694",
+   "21766-21772"
+  ],
+  "aaDeletionsNew": [
+   "ORF1a:K141-",
+   "ORF1a:S142-",
+   "ORF1a:F143-",
+   "S:A67-",
+   "S:I68-"
+  ],
+  "nucSubstitutionsReverted": [],
+  "aaSubstitutionsReverted": [
+   "N:Q241H",
+   "S:A67V",
+   "S:T95I",
+   "S:I101T",
+   "S:F157S",
+   "S:N164K",
+   "S:S172F",
+   "S:K187T",
+   "S:L212I",
+   "S:P251S",
+   "S:I326V",
+   "S:G339Y",
+   "S:A348P",
+   "S:K356T",
+   "S:S371F",
+   "S:S373P",
+   "S:S375F",
+   "S:R403K",
+   "S:D405N",
+   "S:R408S",
+   "S:K417N",
+   "S:A435S",
+   "S:N440R",
+   "S:V445A",
+   "S:G446D",
+   "S:L452W",
+   "S:N460K",
+   "S:S477N",
+   "S:T478N",
+   "S:E484K",
+   "S:G496S",
+   "S:Q498R",
+   "S:N501Y",
+   "S:K529N",
+   "S:E554D",
+   "S:A575S",
+   "S:E583D",
+   "S:D614G",
+   "S:H625R",
+   "S:N641K",
+   "S:V642G",
+   "S:E654K",
+   "S:H655Y",
+   "S:N679R",
+   "S:P681H",
+   "S:A688D",
+   "S:S704L",
+   "S:N764K",
+   "S:K795T",
+   "S:D796Y",
+   "S:A852K",
+   "S:S939F",
+   "S:Q954H",
+   "S:N969K",
+   "S:D1184E"
+  ],
+  "nucDeletionsReverted": [
+   "21765-21770"
+  ],
+  "aaDeletionsReverted": [
    "S:C136-",
    "S:N137-",
    "S:D138-",
@@ -453460,33 +453491,8 @@
    "S:L242-",
    "S:A243-"
   ],
-  "nucSubstitutionsNew": [
-   "A21766T",
-   "T25159C",
-   "C28994T"
-  ],
-  "aaSubstitutionsNew": [
-   "N:Q241Y"
-  ],
-  "nucDeletionsNew": [
-   "686-694",
-   "21767-21772"
-  ],
-  "aaDeletionsNew": [
-   "ORF1a:K141-",
-   "ORF1a:S142-",
-   "ORF1a:F143-"
-  ],
-  "nucSubstitutionsReverted": [],
-  "aaSubstitutionsReverted": [
-   "N:Q241H"
-  ],
-  "nucDeletionsReverted": [
-   "21765-21770"
-  ],
-  "aaDeletionsReverted": [],
   "frameShifts": [
-   ""
+   "S:71-1274"
   ],
   "designationDate": "2026-03-18"
  },
@@ -494669,7 +494675,7 @@
    "G28883C",
    "C29077T",
    "A29510C",
-   "G29868T"
+   "G29868A"
   ],
   "aaSubstitutions": [
    "E:T9I",
@@ -494761,8 +494767,7 @@
    "T23443C",
    "C27393T",
    "A28402G",
-   "C29077T",
-   "G29868T"
+   "C29077T"
   ],
   "aaSubstitutionsNew": [
    "ORF1a:I2873V",
@@ -494771,9 +494776,7 @@
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [
-   "G29868A"
-  ],
+  "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
@@ -789111,7 +789114,7 @@
    "T22930A",
    "T22942G",
    "G22992A",
-   "C22995G",
+   "C22995A",
    "A23013C",
    "T23018C",
    "T23019C",
@@ -789213,7 +789216,7 @@
    "S:F456L",
    "S:N460K",
    "S:S477N",
-   "S:T478R",
+   "S:T478K",
    "S:E484A",
    "S:F486P",
    "S:F490S",
@@ -789252,21 +789255,15 @@
    "S:Y144-"
   ],
   "nucSubstitutionsNew": [
-   "C22995G",
    "A25664G"
   ],
   "aaSubstitutionsNew": [
-   "ORF3a:Y91C",
-   "S:T478R"
+   "ORF3a:Y91C"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [
-   "C22995A"
-  ],
-  "aaSubstitutionsReverted": [
-   "S:T478K"
-  ],
+  "nucSubstitutionsReverted": [],
+  "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -789497,17 +789494,23 @@
    "C1613T",
    "G20995T",
    "G22927C",
+   "C22995G",
    "A27388C"
   ],
   "aaSubstitutionsNew": [
    "ORF1a:L450F",
    "ORF1b:G2510C",
-   "S:L455F"
+   "S:L455F",
+   "S:T478R"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [],
-  "aaSubstitutionsReverted": [],
+  "nucSubstitutionsReverted": [
+   "C22995A"
+  ],
+  "aaSubstitutionsReverted": [
+   "S:T478K"
+  ],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -819924,7 +819927,7 @@
    "G22898A",
    "T22942G",
    "G22992A",
-   "C22995G",
+   "C22995A",
    "A23013C",
    "T23018C",
    "T23019C",
@@ -820025,7 +820028,7 @@
    "S:G446S",
    "S:N460K",
    "S:S477N",
-   "S:T478R",
+   "S:T478K",
    "S:E484A",
    "S:F486P",
    "S:F490S",
@@ -820069,7 +820072,6 @@
    "C841T",
    "C9857T",
    "C20404T",
-   "C22995G",
    "G23236T",
    "G24932A",
    "C29095T",
@@ -820077,18 +820079,13 @@
   ],
   "aaSubstitutionsNew": [
    "ORF1b:P2313S",
-   "S:T478R",
    "S:K558N",
    "S:G1124S"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [
-   "C22995A"
-  ],
-  "aaSubstitutionsReverted": [
-   "S:T478K"
-  ],
+  "nucSubstitutionsReverted": [],
+  "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -917396,7 +917393,7 @@
    "T22032C",
    "C22033A",
    "A22034G",
-   "T22200G",
+   "T22200A",
    "C22208T",
    "C22295A",
    "C22353A",
@@ -917515,7 +917512,7 @@
    "S:F157S",
    "S:R158G",
    "S:L212I",
-   "S:V213G",
+   "S:V213E",
    "S:L216F",
    "S:H245N",
    "S:A264D",
@@ -917593,16 +917590,22 @@
   "nucSubstitutionsNew": [
    "G11596A",
    "C18664T",
+   "T22200A",
    "G22599C",
    "C29762T"
   ],
   "aaSubstitutionsNew": [
+   "S:V213E",
    "S:R346T"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [],
-  "aaSubstitutionsReverted": [],
+  "nucSubstitutionsReverted": [
+   "T22200G"
+  ],
+  "aaSubstitutionsReverted": [
+   "S:V213G"
+  ],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -917862,18 +917865,22 @@
   "nucSubstitutionsNew": [
    "C1267T",
    "C7528T",
-   "A22107G"
+   "A22107G",
+   "T22200G"
   ],
   "aaSubstitutionsNew": [
-   "S:K182R"
+   "S:K182R",
+   "S:V213G"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
   "nucSubstitutionsReverted": [
    "C18664T",
+   "T22200A",
    "A22786C"
   ],
   "aaSubstitutionsReverted": [
+   "S:V213E",
    "S:R408S"
   ],
   "nucDeletionsReverted": [],
@@ -918134,21 +918141,15 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "T22200A",
    "T22928C"
   ],
   "aaSubstitutionsNew": [
-   "S:V213E",
    "S:F456L"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [
-   "T22200G"
-  ],
-  "aaSubstitutionsReverted": [
-   "S:V213G"
-  ],
+  "nucSubstitutionsReverted": [],
+  "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -991622,6 +991623,7 @@
    "A22556G",
    "G22577C",
    "G22578A",
+   "G22599A",
    "A22629C",
    "C22674T",
    "T22679C",
@@ -991770,6 +991772,7 @@
    "S:A264D",
    "S:I332V",
    "S:G339H",
+   "S:R346K",
    "S:K356T",
    "S:S371F",
    "S:S373P",
@@ -991843,11 +991846,13 @@
   "nucSubstitutionsNew": [
    "A2679G",
    "C20823T",
+   "G22599A",
    "A25841G"
   ],
   "aaSubstitutionsNew": [
    "ORF1a:N805S",
-   "ORF3a:H150R"
+   "ORF3a:H150R",
+   "S:R346K"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
@@ -1099868,6 +1099873,7 @@
    "C24378T",
    "A24424T",
    "T24469A",
+   "C24989T",
    "C24990T",
    "C25000T",
    "C25207T",
@@ -1100005,7 +1100011,7 @@
    "S:S939F",
    "S:Q954H",
    "S:N969K",
-   "S:P1143L"
+   "S:P1143F"
   ],
   "nucDeletions": [
    "11288-11296",
@@ -1100037,13 +1100043,18 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "G21123T"
+   "G21123T",
+   "C24989T"
   ],
-  "aaSubstitutionsNew": [],
+  "aaSubstitutionsNew": [
+   "S:P1143F"
+  ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
   "nucSubstitutionsReverted": [],
-  "aaSubstitutionsReverted": [],
+  "aaSubstitutionsReverted": [
+   "S:P1143L"
+  ],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -1167255,6 +1167266,7 @@
    "C23604G",
    "C23854A",
    "G23948T",
+   "C24034T",
    "C24378T",
    "A24424T",
    "T24469A",
@@ -1167421,7 +1167433,8 @@
   ],
   "nucSubstitutionsNew": [
    "C20178T",
-   "C22883A"
+   "C22883A",
+   "C24034T"
   ],
   "aaSubstitutionsNew": [
    "S:L441I"
@@ -1167723,8 +1167736,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C23595T",
-   "C24034T"
+   "C23595T"
   ],
   "aaSubstitutionsNew": [
    "S:T678I"
@@ -1168023,9 +1168035,7 @@
    "S:N211-",
    "S:V483-"
   ],
-  "nucSubstitutionsNew": [
-   "C24034T"
-  ],
+  "nucSubstitutionsNew": [],
   "aaSubstitutionsNew": [],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
@@ -1170764,8 +1170774,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "T8359C",
-   "C24034T"
+   "T8359C"
   ],
   "aaSubstitutionsNew": [],
   "nucDeletionsNew": [],
@@ -1173331,8 +1173340,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C8097T",
-   "C24034T"
+   "C8097T"
   ],
   "aaSubstitutionsNew": [
    "ORF1a:T2611I"
@@ -1173633,8 +1173641,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C23758T",
-   "C24034T"
+   "C23758T"
   ],
   "aaSubstitutionsNew": [],
   "nucDeletionsNew": [],
@@ -1174568,7 +1174575,6 @@
   ],
   "nucSubstitutionsNew": [
    "C5907T",
-   "C24034T",
    "C25282T",
    "C25672T",
    "C25721T",
@@ -1174873,8 +1174879,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C17339T",
-   "C24034T"
+   "C17339T"
   ],
   "aaSubstitutionsNew": [
    "ORF1b:A1291V"
@@ -1175177,8 +1175182,7 @@
   ],
   "nucSubstitutionsNew": [
    "C583T",
-   "T6673C",
-   "C24034T"
+   "T6673C"
   ],
   "aaSubstitutionsNew": [],
   "nucDeletionsNew": [],
@@ -1175475,7 +1175479,6 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C24034T",
    "C27059T"
   ],
   "aaSubstitutionsNew": [],
@@ -1175773,7 +1175776,6 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C24034T",
    "G28079T"
   ],
   "aaSubstitutionsNew": [],
@@ -1176072,8 +1176074,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "G18781A",
-   "C24034T"
+   "G18781A"
   ],
   "aaSubstitutionsNew": [
    "ORF1b:G1772S"
@@ -1176372,8 +1176373,7 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "G2875A",
-   "C24034T"
+   "G2875A"
   ],
   "aaSubstitutionsNew": [],
   "nucDeletionsNew": [],
@@ -1176679,8 +1176679,7 @@
   "nucSubstitutionsNew": [
    "C7819T",
    "A23148C",
-   "T23158G",
-   "C24034T"
+   "T23158G"
   ],
   "aaSubstitutionsNew": [
    "S:K529T",
@@ -1178238,7 +1178237,6 @@
    "C1684T",
    "C1878T",
    "T23600C",
-   "C24034T",
    "C29095T"
   ],
   "aaSubstitutionsNew": [
@@ -1179184,7 +1179182,6 @@
    "C15654T",
    "C20844T",
    "C23601T",
-   "C24034T",
    "T25496C"
   ],
   "aaSubstitutionsNew": [
@@ -1241707,6 +1241704,7 @@
    "C897A",
    "C920T",
    "G1148T",
+   "C1288T",
    "G1954A",
    "C2790T",
    "C3037T",
@@ -1241986,6 +1241984,7 @@
   ],
   "nucSubstitutionsNew": [
    "C44T",
+   "C1288T",
    "C23277T"
   ],
   "aaSubstitutionsNew": [
@@ -1242297,7 +1242296,6 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C1288T",
    "A29122G"
   ],
   "aaSubstitutionsNew": [],
@@ -1242611,7 +1242609,6 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C1288T",
    "C6317T",
    "C12025T",
    "C23939T"
