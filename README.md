@@ -44,7 +44,6 @@ The repository contains:
 ## Caveats
 
 - Not all designated lineages are included in this repo. Some (in particular early) pandemic lineages have too few or no designated sequences available for the algorithm to be confident.
-- Consensus sequences are only published if there are more than 3 sequences of a lineage available as open data (Genbank/RKI/COG-UK)
 - Insertions are currently never included in consensus sequences. They may or may not be added in the future.
 - Currently, when one position is mutated twice, e.g. `486F->S->L` this gives rise to both a reversion and a new substitution. This might be changed in the future.
 

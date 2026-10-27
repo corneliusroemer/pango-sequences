@@ -63,56 +63,22 @@ rule run_nextclade:
         "nextclade run --in-order -d sars-cov-2 --output-all build {input}"
 
 
-rule download_open_metadata:
-    output:
-        "build/open_metadata.tsv.zst",
-    shell:
-        """
-        aws s3 cp --no-progress s3://nextstrain-data/files/ncov/open/metadata.tsv.zst {output}
-        """
-
-
-rule find_open_lineages:
-    """
-    Publish consensus sequences only if there are 3 or more open genomes
-    """
-    input:
-        rules.download_open_metadata.output,
-    output:
-        "build/open_lineages.txt",
-    shell:
-        """
-        zstdcat {input} | \
-        tsv-summarize -H --group-by Nextclade_pango --count | \
-        tsv-filter -H --ge 'count:3' | \
-        tsv-select -H -f1 >{output}
-        """
-
-
 rule compress_nuc:
     input:
-        fasta="build/pango-consensus-sequences_genome-nuc.fasta",
-        open="build/open_lineages.txt",
+        "build/pango-consensus-sequences_genome-nuc.fasta",
     output:
         "data/pango-consensus-sequences_genome-nuc.fasta.zst",
     shell:
-        """
-        seqkit grep -f {input.open} {input.fasta} | \
-        zstd -f --ultra -21 >{output}
-        """
+        "zstd -f --ultra -21 {input} -o {output}"
 
 
 rule compress_translations:
     input:
-        fasta="build/nextclade_gene_{gene}.translation.fasta",
-        open="build/open_lineages.txt",
+        "build/nextclade_gene_{gene}.translation.fasta",
     output:
         "data/pango-consensus-sequences_{gene}-aa.fasta.zst",
     shell:
-        """
-        seqkit grep -f {input.open} {input.fasta} | \
-        zstd -f --ultra -21 >{output}
-        """
+        "zstd -f --ultra -21 {input} -o {output}"
 
 
 rule create_json:
