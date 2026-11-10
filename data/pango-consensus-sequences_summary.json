@@ -141657,7 +141657,6 @@
    "C21T",
    "G24A",
    "T25G",
-   "A30G",
    "C241T",
    "T670G",
    "C897A",
@@ -141871,7 +141870,8 @@
    "S:E1150D"
   ],
   "nucDeletions": [
-   "32-48",
+   "30-44",
+   "48",
    "11288-11296",
    "21633-21641",
    "21765-21770",
@@ -141903,14 +141903,14 @@
   "nucSubstitutionsNew": [
    "G24A",
    "T25G",
-   "A30G",
    "G22599C"
   ],
   "aaSubstitutionsNew": [
    "S:R346T"
   ],
   "nucDeletionsNew": [
-   "32-48"
+   "30-44",
+   "48"
   ],
   "aaDeletionsNew": [],
   "nucSubstitutionsReverted": [
@@ -298830,6 +298830,7 @@
   ],
   "nextstrainClade": "24C",
   "nucSubstitutions": [
+   "C21T",
    "C44T",
    "C241T",
    "T670G",
@@ -299057,7 +299058,7 @@
    "S:P1143L"
   ],
   "nucDeletions": [
-   "12-21",
+   "12-20",
    "11288-11296",
    "21633-21641",
    "21653-21655",
@@ -299096,12 +299097,10 @@
    "S:R346T"
   ],
   "nucDeletionsNew": [
-   "12-21"
+   "12-20"
   ],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [
-   "C21T"
-  ],
+  "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
@@ -299379,7 +299378,6 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C21T",
    "A9235G",
    "C15240T",
    "G29227T"
@@ -299390,7 +299388,7 @@
   "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [
-   "12-21"
+   "12-20"
   ],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -299668,7 +299666,6 @@
    "S:V483-"
   ],
   "nucSubstitutionsNew": [
-   "C21T",
    "A7857G",
    "C15240T"
   ],
@@ -299682,7 +299679,7 @@
   "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [
-   "12-21"
+   "12-20"
   ],
   "aaDeletionsReverted": [],
   "frameShifts": [
@@ -484182,7 +484179,7 @@
    "21765-21770",
    "28362-28370",
    "29734-29759",
-   "29864-29868"
+   "29862-29867"
   ],
   "aaDeletions": [
    "N:E31-",
@@ -484211,7 +484208,7 @@
    "ORF6:D6G"
   ],
   "nucDeletionsNew": [
-   "29864-29868"
+   "29862-29867"
   ],
   "aaDeletionsNew": [],
   "nucSubstitutionsReverted": [
@@ -494669,7 +494666,7 @@
    "G28883C",
    "C29077T",
    "A29510C",
-   "G29868A"
+   "G29868T"
   ],
   "aaSubstitutions": [
    "E:T9I",
@@ -494761,7 +494758,8 @@
    "T23443C",
    "C27393T",
    "A28402G",
-   "C29077T"
+   "C29077T",
+   "G29868T"
   ],
   "aaSubstitutionsNew": [
    "ORF1a:I2873V",
@@ -494770,7 +494768,9 @@
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [],
+  "nucSubstitutionsReverted": [
+   "G29868A"
+  ],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
@@ -976860,7 +976860,7 @@
    "C23423T",
    "C23525T",
    "T23599G",
-   "C23604A",
+   "C23604G",
    "C23854A",
    "G23948T",
    "T24377C",
@@ -976992,7 +976992,7 @@
    "S:P621S",
    "S:H655Y",
    "S:N679K",
-   "S:P681H",
+   "S:P681R",
    "S:N764K",
    "S:D796Y",
    "S:S939L",
@@ -977031,21 +977031,16 @@
   ],
   "nucSubstitutionsNew": [
    "C8240T",
-   "C23604A",
    "T24377C"
   ],
   "aaSubstitutionsNew": [
    "ORF1a:H2659Y",
-   "S:P681H",
    "S:S939L"
   ],
   "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [
-   "C23604G"
-  ],
+  "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [
-   "S:P681R",
    "S:S939F"
   ],
   "nucDeletionsReverted": [],
@@ -1039453,7 +1039448,8 @@
    "G28883C",
    "G28884C",
    "C28958A",
-   "A29510C"
+   "A29510C",
+   "T29867A"
   ],
   "aaSubstitutions": [
    "E:T9I",
@@ -1039559,8 +1039555,7 @@
    "22194-22196",
    "23009-23011",
    "28362-28370",
-   "29734-29759",
-   "29867"
+   "29734-29759"
   ],
   "aaDeletions": [
    "N:E31-",
@@ -1039591,13 +1039586,9 @@
   "aaSubstitutionsNew": [
    "S:G75R"
   ],
-  "nucDeletionsNew": [
-   "29867"
-  ],
+  "nucDeletionsNew": [],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [
-   "T29867A"
-  ],
+  "nucSubstitutionsReverted": [],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
