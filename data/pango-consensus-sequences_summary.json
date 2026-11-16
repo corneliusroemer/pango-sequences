@@ -1039466,8 +1039466,7 @@
    "G28883C",
    "G28884C",
    "C28958A",
-   "A29510C",
-   "T29867A"
+   "A29510C"
   ],
   "aaSubstitutions": [
    "E:T9I",
@@ -1039573,7 +1039572,8 @@
    "22194-22196",
    "23009-23011",
    "28362-28370",
-   "29734-29759"
+   "29734-29759",
+   "29867"
   ],
   "aaDeletions": [
    "N:E31-",
@@ -1039604,9 +1039604,13 @@
   "aaSubstitutionsNew": [
    "S:G75R"
   ],
-  "nucDeletionsNew": [],
+  "nucDeletionsNew": [
+   "29867"
+  ],
   "aaDeletionsNew": [],
-  "nucSubstitutionsReverted": [],
+  "nucSubstitutionsReverted": [
+   "T29867A"
+  ],
   "aaSubstitutionsReverted": [],
   "nucDeletionsReverted": [],
   "aaDeletionsReverted": [],
